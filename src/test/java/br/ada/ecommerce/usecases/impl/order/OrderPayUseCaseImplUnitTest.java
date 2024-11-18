@@ -1,13 +1,26 @@
 package br.ada.ecommerce.usecases.impl.order;
 
+import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.model.Order;
 import br.ada.ecommerce.model.OrderStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class OrderPayUseCaseImplUnitTest {
 
     // Todo teste é constituído de entrada, processamento e saída conhecida.
+
+    private Order order;
+    private OrderPayUseCaseImpl useCase;
+
+    @BeforeEach
+    public void setup() {
+        // Será executado antes de cada teste.
+        order = new Order();
+
+        useCase = new OrderPayUseCaseImpl();
+    }
 
     // Dado: Pedido com estado de finalizado
     // Quando: Realizo o pagamento
@@ -15,19 +28,14 @@ public class OrderPayUseCaseImplUnitTest {
     @Test
     public void pedidoFinalizado_realizoPagamento_deveFalhar() {
         // dado
-        var order = new Order();
         order.setStatus(OrderStatus.FINISH);
 
         // quando
-        var exceptionWasThrow = false;
-        try {
-            new OrderPayUseCaseImpl().pay(order);
-        } catch (RuntimeException ex) {
-            exceptionWasThrow = true;
-        }
-
-        //Entao
-        Assertions.assertTrue(exceptionWasThrow);
+        // então
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> useCase.pay(order)
+        );
     }
 
     // Dado: Pedido com estado de aguardando pagamento
@@ -55,15 +63,11 @@ public class OrderPayUseCaseImplUnitTest {
         order.setStatus(OrderStatus.OPEN);
 
         // quando
-        var exceptionWasThrow = false;
-        try {
-            new OrderPayUseCaseImpl().pay(order);
-        } catch (RuntimeException ex) {
-            exceptionWasThrow = true;
-        }
-
-        //Entao
-        Assertions.assertTrue(exceptionWasThrow);
+        // então
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> new OrderPayUseCaseImpl().pay(order)
+        );
     }
 
     // Dado: Pedido com estado de aguardando pagamento
@@ -84,14 +88,17 @@ public class OrderPayUseCaseImplUnitTest {
     // Então: O estado do pedido deve ser preservado
     @Test
     public void pedidoComEstadoAberto_realizoPagamento_estadoDevePermanecerOMesmo() {
+        // Dado
         var order = new Order();
         order.setStatus(OrderStatus.OPEN);
 
-        try {
-            new OrderPayUseCaseImpl().pay(order);
-        } catch (RuntimeException ex) {
-        }
+        // Quando
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> new OrderPayUseCaseImpl().pay(order)
+        );
 
+        // Então
         Assertions.assertEquals(OrderStatus.OPEN, order.getStatus());
     }
 
