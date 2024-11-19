@@ -48,7 +48,7 @@ public class OrderPayUseCaseImplUnitTest {
         order.setStatus(OrderStatus.PENDING_PAYMENT);
 
         // quando
-        new OrderPayUseCaseImpl().pay(order);
+        useCase.pay(order);
 
         // entao
     }
@@ -66,7 +66,7 @@ public class OrderPayUseCaseImplUnitTest {
         // então
         Assertions.assertThrows(
                 RuntimeException.class,
-                () -> new OrderPayUseCaseImpl().pay(order)
+                () -> useCase.pay(order)
         );
     }
 
@@ -78,7 +78,7 @@ public class OrderPayUseCaseImplUnitTest {
         var order = new Order();
         order.setStatus(OrderStatus.PENDING_PAYMENT);
 
-        new OrderPayUseCaseImpl().pay(order);
+        useCase.pay(order);
 
         Assertions.assertEquals(OrderStatus.PAID, order.getStatus());
     }
@@ -95,7 +95,7 @@ public class OrderPayUseCaseImplUnitTest {
         // Quando
         Assertions.assertThrows(
                 RuntimeException.class,
-                () -> new OrderPayUseCaseImpl().pay(order)
+                () -> useCase.pay(order)
         );
 
         // Então
