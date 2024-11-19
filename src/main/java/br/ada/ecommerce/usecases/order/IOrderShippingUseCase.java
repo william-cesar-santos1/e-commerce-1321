@@ -9,6 +9,6 @@ public interface IOrderShippingUseCase {
      * 2 - Pedido deve passar a ter o status igual a OrderStatus.FINISH
      * 3 - Notificar o cliente e agradecer pela compra
      */
-    void shipping(Order order);
+    void ship(Order order);
 
 }

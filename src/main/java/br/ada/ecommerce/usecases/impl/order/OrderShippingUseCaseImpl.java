@@ -24,7 +24,7 @@ public class OrderShippingUseCaseImpl implements IOrderShippingUseCase {
     }
 
     @Override
-    public void shipping(Order order) {
+    public void ship(Order order) {
         if (order.getStatus() != OrderStatus.PAID) {
             throw new IllegalStateForShippingException("Pedido em estado invalido para entrega.");
         }
