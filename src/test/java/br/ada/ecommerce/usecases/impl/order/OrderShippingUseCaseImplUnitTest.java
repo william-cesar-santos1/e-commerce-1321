@@ -42,6 +42,8 @@ public class OrderShippingUseCaseImplUnitTest {
         useCase.ship(order);
 
         Assertions.assertEquals(OrderStatus.FINISH, order.getStatus());
+        Mockito.verify(orderRepository, Mockito.times(1))
+                .save(order);
     }
 
     // Dado: Pedido com estado igual a aguardo pagamento

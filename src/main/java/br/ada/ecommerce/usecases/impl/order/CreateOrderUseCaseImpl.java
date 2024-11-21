@@ -24,7 +24,6 @@ public class CreateOrderUseCaseImpl implements ICreateOrderUseCase {
     }
 
     @Override
-    @Transactional
     public Order create(Customer customer) {
         validCustomer(customer);
         Order order = new Order();
