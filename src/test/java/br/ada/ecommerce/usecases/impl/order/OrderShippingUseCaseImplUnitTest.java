@@ -8,7 +8,9 @@ import br.ada.ecommerce.usecases.repository.IOrderRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class OrderShippingUseCaseImplUnitTest {
 
@@ -44,6 +46,13 @@ public class OrderShippingUseCaseImplUnitTest {
         Assertions.assertEquals(OrderStatus.FINISH, order.getStatus());
         Mockito.verify(orderRepository, Mockito.times(1))
                 .save(order);
+
+        // captor (captor de argumentos)
+        var captor = ArgumentCaptor.forClass(Order.class);
+        Mockito.verify(orderRepository, Mockito.times(1))
+                .save(captor.capture());
+        var orderCaptured = captor.getValue();
+        Assertions.assertNotNull(orderCaptured);
     }
 
     // Dado: Pedido com estado igual a aguardo pagamento
