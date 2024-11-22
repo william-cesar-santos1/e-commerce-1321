@@ -6,6 +6,8 @@ import br.ada.ecommerce.model.OrderStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class OrderPayUseCaseImplUnitTest {
 
@@ -32,6 +34,18 @@ public class OrderPayUseCaseImplUnitTest {
 
         // quando
         // então
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> useCase.pay(order)
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"OPEN", "PAID", "SHIPPING", "FINISH"})
+    public void pedidoComStatusInvalido_realizadoPagamento_deveFalhar(String value) {
+        var status = OrderStatus.valueOf(value);
+        order.setStatus(status);
+
         Assertions.assertThrows(
                 RuntimeException.class,
                 () -> useCase.pay(order)
