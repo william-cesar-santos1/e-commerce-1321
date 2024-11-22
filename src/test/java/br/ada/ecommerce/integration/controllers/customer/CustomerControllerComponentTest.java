@@ -47,4 +47,25 @@ public class CustomerControllerComponentTest{
         );
     }
 
+    @Test
+    public void clienteExistente_realizoConsultaPorNome_deveRetornarClienteDaBase() throws Exception {
+        // Dado
+        var customer = new Customer();
+        customer.setName("William");
+        Mockito.when(useCase.findByName("William"))
+                .thenReturn(List.of(customer));
+
+        // Quando
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/customers?name=William")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Então
+                .andDo(
+                        MockMvcResultHandlers.print()
+                ).andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                );
+    }
+
 }
