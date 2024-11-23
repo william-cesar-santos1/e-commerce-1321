@@ -10,7 +10,6 @@ public class CustomerDto {
 
     private Long id;
     @NotNull
-    @NotEmpty
     private String name;
     @NotNull
     private String document;

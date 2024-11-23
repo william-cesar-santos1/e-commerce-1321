@@ -1,0 +1,11 @@
+{
+  "document": "dummy-value",
+  "email": [
+    "test@test.com",
+    "email@two.com"
+  ],
+  "telephone": [
+    "0000000"
+  ],
+  "birthDate": "1989-06-02"
+}

@@ -14,14 +14,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CustomerControllerComponentTest{
+public class CustomerControllerComponentTest {
 
     @MockBean
-    private ICustomerUseCase useCase;
+    private ICustomerUseCase useCase;//Service
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,19 +34,19 @@ public class CustomerControllerComponentTest{
         var customer = new Customer();
         customer.setName("William");
         Mockito.when(useCase.list())
-                        .thenReturn(List.of(customer));
+                .thenReturn(List.of(customer));
 
         // Quando
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/customers")
-                        .accept(MediaType.APPLICATION_JSON)
-        )
-        //Então
-        .andDo(
-                MockMvcResultHandlers.print()
-        ).andExpect(
-                MockMvcResultMatchers.status().isOk()
-        );
+                        MockMvcRequestBuilders.get("/customers")//Lembre-se de utilizar a uri do seu controller
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Então
+                .andDo(
+                        MockMvcResultHandlers.print()
+                ).andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                );
     }
 
     @Test
@@ -66,6 +68,35 @@ public class CustomerControllerComponentTest{
                 ).andExpect(
                         MockMvcResultMatchers.status().isOk()
                 );
+    }
+
+    @Test
+    public void clienteNaoExiste_realizadoOCadastroSemONome_devoObterFalha() throws Exception {
+        // TODO read from file content
+        var customerJson = """
+                {
+                  "document": "dummy-value",
+                  "email": [
+                    "test@test.com",
+                    "email@two.com"
+                  ],
+                  "telephone": [
+                    "0000000"
+                  ],
+                  "birthDate": "1989-06-02"
+                }
+                """;
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/customers")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(customerJson)
+        ).andDo(
+                MockMvcResultHandlers.print()
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        );
     }
 
 }
