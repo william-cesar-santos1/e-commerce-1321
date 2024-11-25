@@ -3,6 +3,7 @@ package br.ada.ecommerce.integration.controllers.customer;
 import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.usecases.customer.ICustomerUseCase;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -67,25 +68,16 @@ public class CustomerControllerComponentTest {
                         MockMvcResultHandlers.print()
                 ).andExpect(
                         MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].name").value("William")
                 );
     }
 
     @Test
     public void clienteNaoExiste_realizadoOCadastroSemONome_devoObterFalha() throws Exception {
-        // TODO read from file content
-        var customerJson = """
-                {
-                  "document": "dummy-value",
-                  "email": [
-                    "test@test.com",
-                    "email@two.com"
-                  ],
-                  "telephone": [
-                    "0000000"
-                  ],
-                  "birthDate": "1989-06-02"
-                }
-                """;
+        var resource = ClassLoaderUtils.getDefaultClassLoader()
+                .getResource("customer-without-name.json");
+        var customerJson = Files.readString(Paths.get(resource.toURI()));
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/customers")
@@ -96,6 +88,8 @@ public class CustomerControllerComponentTest {
                 MockMvcResultHandlers.print()
         ).andExpect(
                 MockMvcResultMatchers.status().isBadRequest()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.errors[0].name").value("must not be null")
         );
     }
 
