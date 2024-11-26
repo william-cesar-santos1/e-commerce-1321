@@ -22,6 +22,14 @@ services:
     networks:
       - postgres-network
 
+  wiremock:
+    image: "wiremock/wiremock:latest"
+    ports:
+      - "8282:8080"
+    volumes:
+      - ./local/wiremock/mappings:/home/wiremock/mappings
+    entrypoint: [ "/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose" ]
+
 networks:
   postgres-network:
     driver: bridge

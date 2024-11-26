@@ -1,12 +1,18 @@
 package br.ada.ecommerce.integration.sms;
 
-import java.util.List;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-public class SendSms {
+@FeignClient(
+        value = "sms-client",
+        url = "${ecommerce.sms-client.url}"
+)
+public interface SendSms {
 
-    public void send(String from, List<String> to, String content) {
-        System.out.println("Enviando sms de: " + from + ", para: " + to);
-        System.out.println("Conteúdo: " + content);
-    }
+    @PostMapping("/sms")
+    SmsResult send(
+            @RequestBody SmsRequest request
+    );
 
 }
