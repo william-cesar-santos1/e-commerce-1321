@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
 
-@Service
+//@Service
 public class CreateInvoiceOrderImpl implements ICreateInvoiceOrderUseCase {
 
     private WebClient client;
@@ -25,6 +25,7 @@ public class CreateInvoiceOrderImpl implements ICreateInvoiceOrderUseCase {
                 .map(item -> item.getSaleValue().multiply(BigDecimal.valueOf(item.getAmount())))
                 .reduce((first, second) -> first.add(second))
                 .ifPresent(value -> invoice.setAmount(value));
+
         client.post()
                 .uri("/nota-fiscal")
                 .bodyValue(invoice)

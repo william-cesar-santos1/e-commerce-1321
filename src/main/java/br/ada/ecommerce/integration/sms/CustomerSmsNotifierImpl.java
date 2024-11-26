@@ -2,7 +2,9 @@ package br.ada.ecommerce.integration.sms;
 
 import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.usecases.INotifierUseCase;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CustomerSmsNotifierImpl implements INotifierUseCase<Customer> {
 
     private SendSms sendSms;
