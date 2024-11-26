@@ -15,7 +15,7 @@ public class Order {
     private Long id;
     @ManyToOne
     private Customer customer;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<OrderItem> items;
     private LocalDateTime orderedAt;
     @Enumerated(EnumType.STRING)

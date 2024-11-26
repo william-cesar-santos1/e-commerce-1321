@@ -2,6 +2,8 @@ package br.ada.ecommerce.integration.controllers.customer;
 
 import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.usecases.customer.ICustomerUseCase;
+import br.ada.ecommerce.usecases.repository.ICustomerRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.mockito.Mockito;
@@ -24,7 +26,7 @@ import java.util.List;
 public class CustomerControllerComponentTest {
 
     @MockBean
-    private ICustomerUseCase useCase;//Service
+    private ICustomerUseCase useCase;
 
     @Autowired
     private MockMvc mockMvc;
