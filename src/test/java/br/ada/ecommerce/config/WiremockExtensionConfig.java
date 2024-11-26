@@ -11,6 +11,7 @@ public class WiremockExtensionConfig extends WireMockExtension {
                 WireMockExtension.newInstance()
                         .options(
                                 new WireMockConfiguration()
+                                        .usingFilesUnderDirectory("./local/wiremock")
                                         .port(8282)
                                         .notifier(new ConsoleNotifier(true))
                         )

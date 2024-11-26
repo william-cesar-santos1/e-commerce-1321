@@ -1,13 +1,11 @@
 package br.ada.ecommerce.integration.sms;
 
 import br.ada.ecommerce.config.WiremockExtensionConfig;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -20,30 +18,13 @@ public class SendSmsIntegrationTest {
 
     @Test
     public void possuoONumero_envioSms_devoObterSucesso() {
-        WireMock.configureFor(8282);
-        WireMock.stubFor(
-                WireMock.post("/sms")
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-type", MediaType.APPLICATION_JSON_VALUE)
-                                        .withBody("""
-                                                {
-                                                    "messageId": "some-value",
-                                                    "result": "success"
-                                                }
-                                                """)
-
-                        )
-        );
-
         var request = new SmsRequest();
         request.setContent("Bem vindo");
-        request.setPhones(List.of("123456"));
+        request.setPhones(List.of("11111"));
 
         var result = sendSms.send(request);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("some-value", result.getMessageId());
+        Assertions.assertEquals("dummy-value", result.getMessageId());
     }
 
 }

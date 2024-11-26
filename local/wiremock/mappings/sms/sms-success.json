@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/sms",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": {
+          "expression": "$.phones",
+          "contains": "11111"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "messageId": "dummy-value",
+      "result": "success"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
