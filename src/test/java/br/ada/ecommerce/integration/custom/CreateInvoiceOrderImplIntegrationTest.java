@@ -4,6 +4,7 @@ import br.ada.ecommerce.config.WiremockExtensionConfig;
 import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.model.Order;
 import br.ada.ecommerce.model.OrderItem;
+import br.ada.ecommerce.util.DataBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,21 +41,7 @@ public class CreateInvoiceOrderImplIntegrationTest {
                     )
         );
 
-        var customer = new Customer();
-        customer.setDocument("123456");
-
-        var item = new OrderItem();
-        item.setAmount(5);
-        item.setSaleValue(BigDecimal.TEN);
-
-        var items = new ArrayList<OrderItem>();
-        items.add(item);
-
-        var order = new Order();
-        order.setCustomer(customer);
-        order.setOrderedAt(LocalDateTime.now());
-        order.setItems(items);
-
+        var order = DataBuilder.buildOrder();
         service.create(order);
     }
 
