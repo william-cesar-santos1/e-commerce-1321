@@ -108,7 +108,7 @@
 						<configuration>
 							<rules>
 								<rule>
-									<element>PACKAGE</element>
+									<element>METHOD</element>
 									<limits>
 										<limit>
 											<counter>METHOD</counter>
