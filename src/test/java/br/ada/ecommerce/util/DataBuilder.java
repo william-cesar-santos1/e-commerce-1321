@@ -1,9 +1,6 @@
 package br.ada.ecommerce.util;
 
-import br.ada.ecommerce.model.Customer;
-import br.ada.ecommerce.model.Order;
-import br.ada.ecommerce.model.OrderItem;
-import br.ada.ecommerce.model.Product;
+import br.ada.ecommerce.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +31,7 @@ public class DataBuilder {
         order.setCustomer(buildCustomer());
         order.setOrderedAt(LocalDateTime.now());
         order.setItems(List.of(buildOrderItem(buildProduct())));
+        order.setStatus(OrderStatus.OPEN);
         return order;
     }
 
