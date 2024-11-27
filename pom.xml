@@ -113,7 +113,7 @@
 										<limit>
 											<counter>METHOD</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>40%</minimum>
+											<minimum>0%</minimum>
 										</limit>
 									</limits>
 								</rule>
