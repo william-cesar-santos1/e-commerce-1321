@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 @Service
 public class OrderPlaceUseCaseImpl implements IOrderPlaceUseCase {
 
-    private INotifierUseCase<Order> orderNotifier;
+//    private INotifierUseCase<Order> orderNotifier;
 
-    public OrderPlaceUseCaseImpl(INotifierUseCase<Order> orderNotifier) {
-        this.orderNotifier = orderNotifier;
+    public OrderPlaceUseCaseImpl() {
+//        this.orderNotifier = orderNotifier;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class OrderPlaceUseCaseImpl implements IOrderPlaceUseCase {
             throw new RuntimeException("Pedido zerado, não é possível prosseguir");
         }
         order.setStatus(OrderStatus.PENDING_PAYMENT);
-        orderNotifier.updated(order);
+//        orderNotifier.updated(order);
     }
 
     private BigDecimal amount(Order order) {

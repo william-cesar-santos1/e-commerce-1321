@@ -1,5 +1,6 @@
 package br.ada.ecommerce.integration.web;
 
+import br.ada.ecommerce.integration.controllers.product.ProductAlreadyExists;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,4 +60,19 @@ public class GenericExceptionHandler {
                 .body(body);
     }
 
+    @ExceptionHandler(value = {ProductAlreadyExists.class})
+    public ResponseEntity<Object> handleProductAlreadyExists(
+            ProductAlreadyExists ex,
+            WebRequest request
+    ) {
+        log.warn("Unhandled exception:", ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                        {
+                            "code": "ERR_00001",
+                            "message": "Product already exists"
+                        }
+                        """);
+    }
 }

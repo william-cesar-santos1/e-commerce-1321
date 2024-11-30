@@ -1,15 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/sms",
-    "bodyPatterns": [
-      {
-        "matchesJsonPath": {
-          "expression": "$.phones",
-          "contains": "11111"
-        }
-      }
-    ]
+    "url": "/sms"
   },
   "response": {
     "status": 200,

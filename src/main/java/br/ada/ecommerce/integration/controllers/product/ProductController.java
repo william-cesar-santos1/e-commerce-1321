@@ -3,6 +3,7 @@ package br.ada.ecommerce.integration.controllers.product;
 import br.ada.ecommerce.model.Product;
 import br.ada.ecommerce.usecases.product.IProductUseCase;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @ResponseStatus(HttpStatus.CREATED)
     public ProductDto create(@Valid @RequestBody ProductDto dto) {
         Product product = fromDto(dto);
         productUseCase.create(product);

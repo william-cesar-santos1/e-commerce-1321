@@ -3,7 +3,9 @@ package br.ada.ecommerce.integration.email;
 import br.ada.ecommerce.model.Customer;
 import br.ada.ecommerce.usecases.INotifierUseCase;
 import jakarta.mail.MessagingException;
+import org.springframework.stereotype.Service;
 
+//@Service
 public class CustomerEmailNotifierImpl implements INotifierUseCase<Customer> {
 
     private SendEmail sendEmail;

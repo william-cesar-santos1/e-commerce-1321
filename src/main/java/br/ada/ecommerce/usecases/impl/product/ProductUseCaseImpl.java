@@ -1,5 +1,6 @@
 package br.ada.ecommerce.usecases.impl.product;
 
+import br.ada.ecommerce.integration.controllers.product.ProductAlreadyExists;
 import br.ada.ecommerce.model.Product;
 import br.ada.ecommerce.usecases.product.IProductUseCase;
 import br.ada.ecommerce.usecases.repository.IProductRepository;
@@ -21,6 +22,10 @@ public class ProductUseCaseImpl implements IProductUseCase {
     @Override
     @Transactional
     public void create(Product product) {
+        var alreadyExists = repository.findByBarcode(product.getBarcode());
+        if (alreadyExists != null) {
+            throw new ProductAlreadyExists();
+        }
         repository.save(product);
     }
 
