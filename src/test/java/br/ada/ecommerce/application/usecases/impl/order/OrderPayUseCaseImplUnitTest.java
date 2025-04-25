@@ -2,37 +2,48 @@ package br.ada.ecommerce.application.usecases.impl.order;
 
 import br.ada.ecommerce.application.model.Order;
 import br.ada.ecommerce.application.model.OrderStatus;
+import br.ada.ecommerce.application.usecases.exception.IllegalOrderStateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class OrderPayUseCaseImplUnitTest {
 
-    private OrderPayUseCaseImpl useCase = new OrderPayUseCaseImpl();
+    private OrderPayUseCaseImpl orderPayUseCase = new OrderPayUseCaseImpl();
 
-//    Verificar status do pedido.
-    // - Criar um pedido com status open
-    // - Chamar ação de pagar
-    // - Validar exceção
     @Test
-    public void test_if_order_is_open_cannot_pay() {
+    public void my_first_test() {
+        System.out.println("Meu primeiro teste");
+    }
+
+    // Realizar o pagamento de um pedido que esteja com estado OPEN
+    @Test
+    public void test_if_order_have_open_state_throws_exception_when_i_try_pay() {
+        // - Criar um pedido com status open
         var order = new Order();
         order.setStatus(OrderStatus.OPEN);
 
-        var hasException = false;
-        try {
-            useCase.pay(order);
-        } catch(RuntimeException ex) {
-            hasException = true;
-        }
-        Assertions.assertEquals(true, hasException);
+        // - Validar exceção
+        Assertions.assertThrows(IllegalOrderStateException.class, () ->
+                // - Chamar ação de pagar
+                orderPayUseCase.pay(order)
+        );
     }
 
-//    Verificar mensagem da exceção.
-    // - Criar um pedido com status open
-    // - Chamar ação de pagar
-    // - Validar mensagem da exceção
+    // Realizar o pagamento de um pedido que já foi pago (estado PAID)
+    @Test
+    public void test_if_order_have_paid_state_throws_exception_when_i_try_pay() {
+        // - Criar um pedido com status paid
+        var order = new Order();
+        order.setStatus(OrderStatus.PAID);
 
-    //    Verificar se o status mudou para pago.
+        // - Validar exceção
+        Assertions.assertThrows(IllegalOrderStateException.class, () ->
+                // - Chamar ação de pagar
+                orderPayUseCase.pay(order)
+        );
+    }
+
+    // Verificar se o status mudou para pago.
     @Test
     public void test_if_order_have_paid_state_after_action() {
         // - Criar um pedido com status PENDING_PAYMENT(dado)
@@ -40,13 +51,10 @@ public class OrderPayUseCaseImplUnitTest {
         order.setStatus(OrderStatus.PENDING_PAYMENT);
 
         // - Chamar ação de pagar(quando)
-        useCase.pay(order);
+        orderPayUseCase.pay(order);
 
         // - Verificar se o status é paid(então)
         Assertions.assertEquals(OrderStatus.PAID, order.getStatus());
     }
-
-//    Verificar se o pedido esta nulo.
-    // - Chamar ação de pagar com pedido nulo
 
 }
