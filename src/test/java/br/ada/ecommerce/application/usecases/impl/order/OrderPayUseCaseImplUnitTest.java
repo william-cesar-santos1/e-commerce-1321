@@ -16,8 +16,8 @@ public class OrderPayUseCaseImplUnitTest {
     public void my_first_test() {
         System.out.println("Meu primeiro teste");
 
-        var first = BigDecimal.valueOf(10.47566156165641);
-        var second = BigDecimal.valueOf(10.47566156165641);
+        var first = BigDecimal.valueOf(10);
+        var second = BigDecimal.valueOf(10.00000);
 
         Assertions.assertTrue(first.compareTo(second) == 0);
         // Assertions.assertEquals(); - Faz a comparação entre dois valores, garante que sejam iguais. Cuidado com os tipos, os dois objetos precisam ser do memso tipo.
