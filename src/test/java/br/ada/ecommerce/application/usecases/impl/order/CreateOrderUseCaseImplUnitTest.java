@@ -1,8 +1,10 @@
 package br.ada.ecommerce.application.usecases.impl.order;
 
 import br.ada.ecommerce.application.model.Customer;
+import br.ada.ecommerce.application.usecases.exception.UseCaseException;
 import br.ada.ecommerce.application.usecases.repository.ICustomerRepository;
 import br.ada.ecommerce.application.usecases.repository.IOrderRepository;
+import br.ada.ecommerce.application.usecases.repository.RepositoryException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,13 +12,14 @@ import org.mockito.Mockito;
 
 public class CreateOrderUseCaseImplUnitTest {
 
-    private CreateOrderUseCaseImpl createOrderUseCase;
     private IOrderRepository orderRepository;
     private ICustomerRepository customerRepository;
+    private CreateOrderUseCaseImpl createOrderUseCase;
 
     @BeforeEach
     public void setup() {
         System.out.println("Executando o before each");
+
         orderRepository = Mockito.mock(IOrderRepository.class);
         customerRepository = Mockito.mock(ICustomerRepository.class);
 
@@ -31,6 +34,7 @@ public class CreateOrderUseCaseImplUnitTest {
      */
     @Test
     public void customerNotExists_whenCreateOrder_thenThrowsIllegalStateException() {
+        System.out.println("customerNotExists_whenCreateOrder_thenThrowsIllegalStateException");
         Mockito.when(customerRepository.findByDocument("dummy-value")).thenReturn(null);
 
         var customer = new Customer();
@@ -49,6 +53,7 @@ public class CreateOrderUseCaseImplUnitTest {
      */
     @Test
     public void customerExists_whenCreateOrder_success() {
+        System.out.println("customerExists_whenCreateOrder_success");
         Mockito.when(customerRepository.findByDocument("dummy-value")).thenReturn(new Customer());
 
         var customer = new Customer();
@@ -59,4 +64,41 @@ public class CreateOrderUseCaseImplUnitTest {
 
     //Teste para pedido com estado em aberto
     //Teste pedido novo sem items
+
+    /* - Teste para falha na comunicação com o repository
+        -- Dado que o cliente existe
+        -- Quando eu crio um pedido, o repository lança uma exceção
+        -- Então a exceção deve ser relançada
+     */
+    @Test
+    public void givenCustomerExists_whenCreateNewOrderAndRepositoryThrowsException_thenReThrowAnyUseCaseException() {
+        System.out.println("givenCustomerExists_whenCreateNewOrderAndRepositoryThrowsException_thenReThrowAnyUseCaseException");
+        Mockito.when(customerRepository.findByDocument("some-value")).thenReturn(new Customer());
+        Mockito.when(orderRepository.save(Mockito.any())).thenThrow(RepositoryException.class);
+
+        var customer = new Customer();
+        customer.setDocument("some-value");
+
+        Assertions.assertThrows(UseCaseException.class, () ->
+                createOrderUseCase.create(customer)
+        );
+    }
+
+    // Dado que o cliente existe.
+    // Quando eu tentar consultar pelo documento, deve lançar uma RepositoryException
+    // Então o use case deve relançar como UseCaseException
+    @Test
+    public void givenCustomerExists_whenCreateNewOrderAndCustomerRepositoryThrowsException_thenThrowUseCaseException() {
+        System.out.println("givenCustomerExists_whenCreateNewOrderAndCustomerRepositoryThrowsException_thenThrowUseCaseException");
+        Mockito.when(customerRepository.findByDocument("unit-test")).thenThrow(RepositoryException.class);
+        Mockito.when(orderRepository.save(Mockito.any())).thenThrow(RepositoryException.class);
+
+        var customer = new Customer();
+        customer.setDocument("unit-test");
+
+        Assertions.assertThrows(UseCaseException.class, () ->
+                createOrderUseCase.create(customer)
+        );
+    }
+
 }
