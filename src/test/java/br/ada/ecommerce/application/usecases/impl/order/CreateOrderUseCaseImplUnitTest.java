@@ -124,7 +124,28 @@ public class CreateOrderUseCaseImplUnitTest {
     /* - Teste para garantir que o pedido tenha sido salvo
         -- Dado que possuo um cliente
         -- Quando eu crio um pedido
-        -- O pedido deve ser salvo na base de dados (respository)
+        -- O pedido deve ser salvo na base de dados (repository)
      */
+    @Test
+    public void givenCustomerExists_whenICreateNewOrder_thenOrderShouldBeSave() {
+        System.out.println("givenCustomerExists_whenICreateNewOrder_thenOrderShouldBeSave");
+        Mockito.when(customerRepository.findByDocument("aula-05-04")).thenReturn(new Customer());
+
+        var customer = new Customer();
+        customer.setDocument("aula-05-04");
+
+        var order = createOrderUseCase.create(customer);
+
+        /*
+         times - que tenha sido chamado exatamente a quantidade de vezes [times(1) = tenha sido chamado exatamente uma vez]
+         atLeast - que tenha sido chamado no mínimo a quantidade de vezes [atLeast(1) = tenha sido chamada ao menos um vez]
+         */
+        Mockito.verify(orderRepository, Mockito.atLeast(1))
+                .save(order);
+        /*
+        Quando não informado a forma de verificação, é aplicado o Mockito.times(1)
+        Mockito.verify(orderRepository).save(order);
+         */
+    }
 
 }
