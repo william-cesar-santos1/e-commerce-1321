@@ -34,6 +34,7 @@ public class CreateOrderUseCaseImplUnitTest {
      */
     @Test
     public void customerNotExists_whenCreateOrder_thenThrowsIllegalStateException() {
+        // Exemplo de como criar um mock -> Mockito.mock(ICustomerRepository.class);
         System.out.println("customerNotExists_whenCreateOrder_thenThrowsIllegalStateException");
         Mockito.when(customerRepository.findByDocument("dummy-value")).thenReturn(null);
 
@@ -100,5 +101,30 @@ public class CreateOrderUseCaseImplUnitTest {
                 createOrderUseCase.create(customer)
         );
     }
+
+    /* - Teste para garantir a consulta de cliente
+        -- Dado que possuo o CPF do cliente
+        -- Eu crio um pedido
+        -- Deve consultar esse cliente pelo CPF
+     */
+    @Test
+    public void givenCustomerWithDocument_whenICreateNewOrder_shouldSearchCustomer() {
+        System.out.println("givenCustomerWithDocument_whenICreateNewOrder_shouldSearchCustomer");
+        Mockito.when(customerRepository.findByDocument("aula-05-04")).thenReturn(new Customer());
+
+        var customer = new Customer();
+        customer.setDocument("aula-05-04");
+
+        createOrderUseCase.create(customer);
+
+        Mockito.verify(customerRepository, Mockito.times(1))
+                .findByDocument("aula-05-04");
+    }
+
+    /* - Teste para garantir que o pedido tenha sido salvo
+        -- Dado que possuo um cliente
+        -- Quando eu crio um pedido
+        -- O pedido deve ser salvo na base de dados (respository)
+     */
 
 }
