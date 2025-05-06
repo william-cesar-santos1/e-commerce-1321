@@ -8,23 +8,24 @@ import br.ada.ecommerce.application.usecases.repository.RepositoryException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class CreateOrderUseCaseImplUnitTest {
 
+    // Com o uso do @Mock e @InjectMocks não é necessário fazer o setup,
+    // pois ele é todo configurado via MockitoExtension
+
+    @Mock
     private IOrderRepository orderRepository;
+
+    @Mock
     private ICustomerRepository customerRepository;
+
+    @InjectMocks
     private CreateOrderUseCaseImpl createOrderUseCase;
-
-    @BeforeEach
-    public void setup() {
-        System.out.println("Executando o before each");
-
-        orderRepository = Mockito.mock(IOrderRepository.class);
-        customerRepository = Mockito.mock(ICustomerRepository.class);
-
-        createOrderUseCase = new CreateOrderUseCaseImpl(orderRepository, customerRepository);
-    }
 
     /* - Teste para cliente inexistente
         -- cliente não existe (consultar no banco e retorna nulo)
@@ -92,7 +93,6 @@ public class CreateOrderUseCaseImplUnitTest {
     public void givenCustomerExists_whenCreateNewOrderAndCustomerRepositoryThrowsException_thenThrowUseCaseException() {
         System.out.println("givenCustomerExists_whenCreateNewOrderAndCustomerRepositoryThrowsException_thenThrowUseCaseException");
         Mockito.when(customerRepository.findByDocument("unit-test")).thenThrow(RepositoryException.class);
-        Mockito.when(orderRepository.save(Mockito.any())).thenThrow(RepositoryException.class);
 
         var customer = new Customer();
         customer.setDocument("unit-test");
@@ -119,6 +119,14 @@ public class CreateOrderUseCaseImplUnitTest {
 
         Mockito.verify(customerRepository, Mockito.times(1))
                 .findByDocument("aula-05-04");
+
+        // Tipo da informação para o captor
+        var captor = ArgumentCaptor.forClass(String.class);
+        // De onde vem a informação
+        Mockito.verify(customerRepository, Mockito.times(1))
+                .findByDocument(captor.capture());
+        var document = captor.getValue();
+        Assertions.assertEquals("aula-05-04", document);
     }
 
     /* - Teste para garantir que o pedido tenha sido salvo
