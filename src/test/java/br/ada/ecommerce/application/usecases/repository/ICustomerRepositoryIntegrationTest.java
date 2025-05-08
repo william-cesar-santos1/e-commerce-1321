@@ -16,22 +16,6 @@ public class ICustomerRepositoryIntegrationTest {
     @Autowired
     private ICustomerRepository repository;
 
-//    @BeforeEach
-//    public void setup() {
-//        IntStream.range(0, 10)
-//                .forEach(index -> {
-//                    var customer = new Customer();
-//                    customer.setDocument("unit-test-" + index);
-//                    customer.setEmail(List.of("unit-test-" + index));
-//                    customer.setTelephone(List.of("unit-test-" + index));
-//                    customer.setName("unit-test-" + index);
-//                    customer.setBirthDate(LocalDate.now());
-//                    repository.save(customer);
-//                    System.out.println("Customer com document " + customer.getDocument()
-//                            + " e nome " + customer.getName() + " foi salvo na base de dados");
-//                });
-//    }
-
     @Test
     public void givenCustomerExists_whenIFindByDocument_thenFoundCustomer() {
         var document = RandomStringUtils.randomNumeric(15);
