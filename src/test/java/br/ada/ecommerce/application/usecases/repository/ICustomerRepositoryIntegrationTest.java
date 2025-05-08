@@ -71,8 +71,10 @@ public class ICustomerRepositoryIntegrationTest {
     }
 
     @Test
-    public void givenCustomerNotExists_whenIFindByName_thenReturnEmptyList() {
-        var customers =
+    public void givenCustomerNotRegistered_whenIFindByName_thenReturnEmptyList() {
+        var customers = repository.findByName(RandomStringUtils.randomAlphabetic(20));
+
+        Assertions.assertTrue(customers.isEmpty());
     }
 
 //    @AfterEach
