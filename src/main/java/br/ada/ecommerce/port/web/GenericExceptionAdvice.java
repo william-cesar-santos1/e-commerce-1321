@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GenericExceptionHandler {
+public class GenericExceptionAdvice {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
