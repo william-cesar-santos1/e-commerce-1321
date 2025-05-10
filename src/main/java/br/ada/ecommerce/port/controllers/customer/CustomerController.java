@@ -36,7 +36,8 @@ public class CustomerController {
             found = customerUseCase.findByName(name);
         }
         return found.stream()
-                .map(this::toDto).collect(Collectors.toList());
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     private Customer fromDto(CustomerDto dto) {

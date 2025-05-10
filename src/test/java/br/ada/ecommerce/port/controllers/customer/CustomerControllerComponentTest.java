@@ -1,9 +1,11 @@
 package br.ada.ecommerce.port.controllers.customer;
 
+import br.ada.ecommerce.application.model.Customer;
 import br.ada.ecommerce.application.usecases.customer.ICustomerUseCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,11 +16,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CustomerControllerComponentTest {
 
-    @MockBean // @MockBean é utilizado devido ao uso do SpringBootTest
+    @MockBean // @MockBean/@MockitoBean é utilizado devido ao uso do SpringBootTest
     private ICustomerUseCase useCase;
 
     @Autowired
@@ -35,11 +39,12 @@ public class CustomerControllerComponentTest {
         customerDto.setDocument("dummy-value");
 
         // When
+        // objectMapper.writeValueAsString == escrever o objeto customerDto como Json
+        var customerAsJson = objectMapper.writeValueAsString(customerDto);
         var request = MockMvcRequestBuilders.post("/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                // objectMapper.writeValueAsString == escrever o objeto customerDto como Json
-                .content(objectMapper.writeValueAsString(customerDto));
+                .content(customerAsJson);
         var response = mockMvc.perform(request);
 
         // Then
@@ -47,8 +52,34 @@ public class CustomerControllerComponentTest {
                 MockMvcResultHandlers.print()
         ).andExpect(
                 MockMvcResultMatchers.status().isBadRequest()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.errors[0].name")
+                        .value("must not be null")
         );
     }
 
+
+    @Test
+    public void givenCustomerExists_whenIFindByName_thenReturnCustomer() throws Exception {
+        // Given
+        var customerWilliam = new Customer();
+        customerWilliam.setName("William");
+        Mockito.when(useCase.findByName("William"))
+                .thenReturn(List.of(customerWilliam));
+
+        // When
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/customers?name=William")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Then
+                .andDo(
+                        MockMvcResultHandlers.print()
+                ).andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].name").value("William")
+                );
+    }
 
 }
