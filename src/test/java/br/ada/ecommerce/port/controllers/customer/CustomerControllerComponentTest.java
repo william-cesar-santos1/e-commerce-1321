@@ -2,7 +2,6 @@ package br.ada.ecommerce.port.controllers.customer;
 
 import br.ada.ecommerce.application.model.Customer;
 import br.ada.ecommerce.application.usecases.customer.ICustomerUseCase;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,6 +32,8 @@ public class CustomerControllerComponentTest {
 
     @Test
     public void givenCustomerNoHasName_whenITryRegister_thenBadRequest() throws Exception {
+        // req -> servlet -> filter -> interceptors (deu ruim por não ter o nome)
+        // intercetors -> advice -> filter -> servlet -> res
         // Given
         var customerDto = new CustomerDto();
         customerDto.setName(null);
@@ -58,6 +59,31 @@ public class CustomerControllerComponentTest {
         );
     }
 
+    @Test
+    public void givenCustomerHasNameAndDocument_whenITryRegister_thenSuccess() throws Exception {
+        // req -> servlet -> filter -> interceptors -> controller
+        // controller -> intercetors -> filter -> servlet -> res
+        // Given
+        var customerDto = new CustomerDto();
+        customerDto.setName("William");
+        customerDto.setDocument("dummy-value");
+
+        // When
+        // objectMapper.writeValueAsString == escrever o objeto customerDto como Json
+        var customerAsJson = objectMapper.writeValueAsString(customerDto);
+        var request = MockMvcRequestBuilders.post("/customers")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerAsJson);
+        var response = mockMvc.perform(request);
+
+        // Then
+        response.andDo(
+                MockMvcResultHandlers.print()
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+    }
 
     @Test
     public void givenCustomerExists_whenIFindByName_thenReturnCustomer() throws Exception {
@@ -77,6 +103,31 @@ public class CustomerControllerComponentTest {
                         MockMvcResultHandlers.print()
                 ).andExpect(
                         MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].name").value("William")
+                );
+    }
+
+    @Test
+    public void givenCustomersExists_whenIList_thenReturnCustomerList() throws Exception {
+        var customer = new Customer();
+        customer.setId(10l);
+        customer.setName("William");
+
+        Mockito.when(useCase.list()).thenReturn(List.of(customer));
+
+        // When
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/customers")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Then
+                .andDo(
+                        MockMvcResultHandlers.print()
+                ).andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].id").value(10)
                 ).andExpect(
                         MockMvcResultMatchers.jsonPath("$[0].name").value("William")
                 );
